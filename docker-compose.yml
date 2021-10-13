@@ -1,27 +1,67 @@
-version: '3'
-services:
-  mongodb:
-    image: mongo
-    restart: always
-    ports:
-     - '3000:27017'
-    environment:
-     - MONGO_INITDB_ROOT_USERNAME=root
-     - MONGO_INITDB_ROOT_PASSWORD=secret
-    volumes:
-     - mongo-data:/data/db
+version: "3.8"
 
-  mongo-express:
-    image: mongo-express
+services:
+  mongo1:
+    image: mongo:4.2
+    container_name: mongo1
+    command: ["--replSet", "my-replica-set", "--bind_ip_all", "--port", "30001"]
+    volumes:
+      - data1:/data/db
+    ports:
+      - 30001:30001
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongo1
+      - MONGODB_REPLICA_SET_MODE=primary
+    healthcheck:
+      test: test $$(echo "rs.initiate({_id:'my-replica-set',members:[{_id:0,host:\"mongo1:30001\"},{_id:1,host:\"mongo2:30002\"},{_id:2,host:\"mongo3:30003\"}]}).ok || rs.status().ok" | mongo --port 30001 --quiet) -eq 1
+      interval: 10s
+      start_period: 30s
+
+  mongo2:
+    image: mongo:4.2
+    container_name: mongo2
+    command: ["--replSet", "my-replica-set", "--bind_ip_all", "--port", "30002"]
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongo2
+      - MONGODB_REPLICA_SET_MODE=secondary
+    volumes:
+      - data2:/data/db
+    ports:
+      - 30002:30002
+
+  mongo3:
+    image: mongo:4.2
+    container_name: mongo3
+    command: ["--replSet", "my-replica-set", "--bind_ip_all", "--port", "30003"]
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongo3
+      - MONGODB_REPLICA_SET_MODE=secondary
+    volumes:
+      - data3:/data/db
+    ports:
+      - 30003:30003
+
+  mongoexpress:
+    image: mongo-express:latest
+    container_name: mongoexpress
     restart: always
     ports:
-     - '8081:8081'
+     - 8081:8081
+    links:
+     - "mongo1"
+     - "mongo2"
+     - "mongo3"
+    depends_on: 
+     - "mongo1"
+     - "mongo2"
+     - "mongo3"
     environment:
-     - ME_CONFIG_MONGODB_ADMINUSERNAME=root
-     - ME_CONFIG_MONGODB_ADMINPASSWORD=secret
-     - ME_CONFIG_MONGODB_SERVER=mongodb
-     - ME_CONFIG_MONGODB_PORT=27017
+     - ME_CONFIG_MONGODB_URL=mongodb://mongo1:30001,mongo2:30002,mongo3:30003/db?replicaSet=my-replica-set
 
 volumes:
-  mongo-data:
+  data1:
+    driver: local
+  data2:
+    driver: local
+  data3:
     driver: local
