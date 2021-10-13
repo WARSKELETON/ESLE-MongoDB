@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from random import randint
 
-client = MongoClient(port=3000, username='root', password='secret')
+client = MongoClient(port=3000)
 db = client.business
 print("Connection successful")
 
