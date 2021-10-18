@@ -1,0 +1,47 @@
+00:39:23.084 [Thread-41] INFO  c.a.mongodb.MongoClientConfiguration - Not validating the replica set name is 'my-replica-set'.
+mongo connection created with mongodb://mongo1:30001,mongo2:30002,mongo3:30003/ycsb?replicaSet=my-replica-set
+00:39:24.269 [MongoDB 35312<--mongo1:30001] INFO  c.a.mongodb.client.ClientImpl - Unknown MongoDB Connection closed: ReplicaSet(MongoDB(35312-->mongo1/127.0.0.1:30001))
+[OVERALL], RunTime(ms), 1275
+[OVERALL], Throughput(ops/sec), 784.3137254901961
+[TOTAL_GCS_PS_Scavenge], Count, 3
+[TOTAL_GC_TIME_PS_Scavenge], Time(ms), 65
+[TOTAL_GC_TIME_%_PS_Scavenge], Time(%), 5.098039215686274
+[TOTAL_GCS_PS_MarkSweep], Count, 0
+[TOTAL_GC_TIME_PS_MarkSweep], Time(ms), 0
+[TOTAL_GC_TIME_%_PS_MarkSweep], Time(%), 0.0
+[TOTAL_GCs], Count, 3
+[TOTAL_GC_TIME], Time(ms), 65
+[TOTAL_GC_TIME_%], Time(%), 5.098039215686274
+[SCAN-FAILED], Operations, 12
+[SCAN-FAILED], AverageLatency(us), 48952.666666666664
+[SCAN-FAILED], MinLatency(us), 21760
+[SCAN-FAILED], MaxLatency(us), 84223
+[SCAN-FAILED], 95thPercentileLatency(us), 79615
+[SCAN-FAILED], 99thPercentileLatency(us), 84223
+[CLEANUP], Operations, 46
+[CLEANUP], AverageLatency(us), 81.32608695652173
+[CLEANUP], MinLatency(us), 1
+[CLEANUP], MaxLatency(us), 3611
+[CLEANUP], 95thPercentileLatency(us), 5
+[CLEANUP], 99thPercentileLatency(us), 3611
+[INSERT], Operations, 0
+[INSERT], AverageLatency(us), NaN
+[INSERT], MinLatency(us), 9223372036854775807
+[INSERT], MaxLatency(us), 0
+[INSERT], 95thPercentileLatency(us), 0
+[INSERT], 99thPercentileLatency(us), 0
+[INSERT], Return=ERROR, 55
+[SCAN], Operations, 933
+[SCAN], AverageLatency(us), 50547.16613076098
+[SCAN], MinLatency(us), 2043
+[SCAN], MaxLatency(us), 248831
+[SCAN], 95thPercentileLatency(us), 92159
+[SCAN], 99thPercentileLatency(us), 224639
+[SCAN], Return=OK, 933
+[SCAN], Return=NOT_FOUND, 12
+[INSERT-FAILED], Operations, 55
+[INSERT-FAILED], AverageLatency(us), 54488.29090909091
+[INSERT-FAILED], MinLatency(us), 14720
+[INSERT-FAILED], MaxLatency(us), 253439
+[INSERT-FAILED], 95thPercentileLatency(us), 81279
+[INSERT-FAILED], 99thPercentileLatency(us), 253183

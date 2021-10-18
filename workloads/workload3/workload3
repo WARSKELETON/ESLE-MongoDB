@@ -1,0 +1,31 @@
+# Yahoo! Cloud System Benchmark
+# Workload 3: Small cardinality consistent data for 2 days
+#   Application example: Typical monitoring of a single compute or small 
+#   sensor station where 90% of the load is write and only 10% is read 
+#   (it's usually much less). All writes are inserts. No sparsity so 
+#   every series will have a value at every timestamp.
+#
+#   Read/insert ratio: 10/90
+#   Cardinality: 16 per key (field), 64 fields for a total of 1,024 
+#                time series.
+workload=site.ycsb.workloads.TimeSeriesWorkload
+
+recordcount=1474560
+operationcount=2949120
+
+fieldlength=8
+fieldcount=64
+tagcount=4
+tagcardinality=1,2,4,2
+
+sparsity=0.05
+delayedSeries=0.0
+delayedIntervals=0
+
+timestampunits=SECONDS
+timestampinterval=10
+querytimespan=86400
+
+readproportion=0.10
+updateproportion=0.00
+insertproportion=0.90

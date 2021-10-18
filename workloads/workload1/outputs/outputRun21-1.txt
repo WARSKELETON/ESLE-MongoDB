@@ -1,0 +1,33 @@
+18:35:27.114 [Thread-5] INFO  c.a.mongodb.MongoClientConfiguration - Not validating the replica set name is 'my-replica-set'.
+mongo connection created with mongodb://mongo1:30001,mongo2:30002,mongo3:30003/ycsb?replicaSet=my-replica-set
+[OVERALL], RunTime(ms), 2808
+[OVERALL], Throughput(ops/sec), 356.1253561253561
+[TOTAL_GCS_PS_Scavenge], Count, 1
+[TOTAL_GC_TIME_PS_Scavenge], Time(ms), 18
+[TOTAL_GC_TIME_%_PS_Scavenge], Time(%), 0.641025641025641
+[TOTAL_GCS_PS_MarkSweep], Count, 0
+[TOTAL_GC_TIME_PS_MarkSweep], Time(ms), 0
+[TOTAL_GC_TIME_%_PS_MarkSweep], Time(%), 0.0
+[TOTAL_GCs], Count, 1
+[TOTAL_GC_TIME], Time(ms), 18
+[TOTAL_GC_TIME_%], Time(%), 0.641025641025641
+[READ], Operations, 531
+[READ], AverageLatency(us), 49066.003766478345
+[READ], MinLatency(us), 1157
+[READ], MaxLatency(us), 553983
+[READ], 95thPercentileLatency(us), 133887
+[READ], 99thPercentileLatency(us), 542719
+[READ], Return=OK, 531
+[CLEANUP], Operations, 21
+[CLEANUP], AverageLatency(us), 448.2857142857143
+[CLEANUP], MinLatency(us), 1
+[CLEANUP], MaxLatency(us), 9303
+[CLEANUP], 95thPercentileLatency(us), 27
+[CLEANUP], 99thPercentileLatency(us), 9303
+[UPDATE], Operations, 469
+[UPDATE], AverageLatency(us), 58138.6289978678
+[UPDATE], MinLatency(us), 2596
+[UPDATE], MaxLatency(us), 550911
+[UPDATE], 95thPercentileLatency(us), 203775
+[UPDATE], 99thPercentileLatency(us), 546303
+[UPDATE], Return=OK, 469
