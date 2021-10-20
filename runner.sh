@@ -2,12 +2,7 @@
 
 usage () {
     cat << EOF
-Usage: runner.sh -w {workload_name} -x {x} -y {y}
-Where:
-  {command} is a string containing the command, including parameters, to run
-  {num_iter} is an positive integer indicating how many iterations to execute
-  [num_parallel] is an (optional) positive integer indicating how many parallel commands should be executed
-     in each iteration. If not provided, the default is half the number of available CPU cores.
+Usage: runner.sh -w {workload_name} -x {x} -y {y} -n {max_client_threads} -s {step} -r {repetitions}
 EOF
 }
 
