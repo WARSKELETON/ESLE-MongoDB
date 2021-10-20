@@ -5,6 +5,7 @@
 | Module               |      Description      |
 | :------------------- | :-------------------: |
 | [workloads](workloads)     |  Workload modules  |
+| [logs](logs)     |  Logs modules  |
 | [runner](runner.sh)     | Workload runner script |
 | [Docker Compose File](docker-compose.yml)     | Docker cluster definition |
 | [concierge](concierge.sh) |   Workload module cleaner  |
@@ -26,17 +27,11 @@
 | [results-latency-scan.dat](workloads/workload1/results-latency-scan.dat)     | Scan operation latency results |
 | [results-latency-update.dat](workloads/workload1/results-latency-update.dat)     | Update operation latency results |
 
-## How to run a workload? _(workload1 example)_
+## How to setup MongoDB cluster? _(PSS Architecture)_
 In the project root folder, deploy with:
 
 ```shell script
 docker-compose up -d
-```
-
-Setup the workload and outputs folder:
-
-```shell script
-mkdir workloads/workload1 | mkdir workloads/workload1/outputs
 ```
 
 Add the servers to the /etc/hosts file using *nano*:
@@ -48,11 +43,21 @@ Add the servers to the /etc/hosts file using *nano*:
 127.0.0.1 mongo3
 ```
 
+## How to setup YCSB? 
+
 Install YCSB tool to the project root:
 
 ```shell script
 curl -O --location https://github.com/brianfrankcooper/YCSB/releases/download/0.17.0/ycsb-0.17.0.tar.gz
 tar xfvz ycsb-0.17.0.tar.gz
+```
+
+## How to create and run a workload? _(workload1 example)_
+
+Setup the workload and outputs folder:
+
+```shell script
+mkdir workloads/workload1 | mkdir workloads/workload1/outputs
 ```
 
 Create the workload in the folder generated previously, workloads/workload1.
@@ -63,7 +68,7 @@ Then, just run our runner script with the specific workload, in the root project
 ./runner.sh -w workload1 -x threads -y ops -n 100 -s 5 -r 3
 ```
 
-This will run workload1 from 0 to 100 client threads in increments of 5, and will be repeating each workload 3 times.
+This will run workload1 from 0 to 100 client threads in increments of 5, and will be repeating each run of the workload 3 times.
 
 ----
 ## Authors
