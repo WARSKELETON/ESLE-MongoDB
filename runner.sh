@@ -175,9 +175,9 @@ done
 latencyString=$(echo "$latencyString" | sed 's/.$//')
 
 # Calculate USL values
-lambda=$(java -jar esle-usl-1.0-SNAPSHOT.jar ./workloads/${workload}/results-throughput.dat | grep Lambda | awk '{print $2}')
-delta=$(java -jar esle-usl-1.0-SNAPSHOT.jar ./workloads/${workload}/results-throughput.dat | grep Lambda | awk '{print $4}')
-kappa=$(java -jar esle-usl-1.0-SNAPSHOT.jar ./workloads/${workload}/results-throughput.dat | grep Lambda | awk '{print $6}')
+lambda=$(java -jar esle-usl-1.0-SNAPSHOT.jar ./workloads/${workload}/results-throughput.dat | grep Lambda | awk '{print $2}' | sed 's/\,/./')
+delta=$(java -jar esle-usl-1.0-SNAPSHOT.jar ./workloads/${workload}/results-throughput.dat | grep Lambda | awk '{print $4}' | sed 's/\,/./')
+kappa=$(java -jar esle-usl-1.0-SNAPSHOT.jar ./workloads/${workload}/results-throughput.dat | grep Lambda | awk '{print $6}' | sed 's/\,/./')
 
 # Build gnuplot file
 printf "set terminal pdf\nset output './workloads/$workload/${workload}.pdf'\nset xlabel 'Client Threads (#)'\nset ylabel 'Throughput (ops/sec)'\nset title '${workload}'\nlambda = ${lambda}\ndelta = ${delta}\nkappa = ${kappa}\nusl(x) = (lambda*x)/(1 + delta*(x-1) + kappa*x*(x-1))\nplot usl(x) title 'theoretical', './workloads/${workload}/results-throughput.dat' using (\$1):(\$2) title 'experiment' with linespoints\n$latencyString" >> ./workloads/$workload/$workload.gp
