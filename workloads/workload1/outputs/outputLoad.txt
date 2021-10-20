@@ -1,0 +1,26 @@
+12:47:27.738 [Thread-3] INFO  c.a.mongodb.MongoClientConfiguration - Not validating the replica set name is 'my-replica-set'.
+mongo connection created with mongodb://mongo1:30001,mongo2:30002,mongo3:30003/ycsb?replicaSet=my-replica-set&w=1
+[OVERALL], RunTime(ms), 1237
+[OVERALL], Throughput(ops/sec), 808.4074373484236
+[TOTAL_GCS_PS_Scavenge], Count, 1
+[TOTAL_GC_TIME_PS_Scavenge], Time(ms), 3
+[TOTAL_GC_TIME_%_PS_Scavenge], Time(%), 0.2425222312045271
+[TOTAL_GCS_PS_MarkSweep], Count, 0
+[TOTAL_GC_TIME_PS_MarkSweep], Time(ms), 0
+[TOTAL_GC_TIME_%_PS_MarkSweep], Time(%), 0.0
+[TOTAL_GCs], Count, 1
+[TOTAL_GC_TIME], Time(ms), 3
+[TOTAL_GC_TIME_%], Time(%), 0.2425222312045271
+[CLEANUP], Operations, 1
+[CLEANUP], AverageLatency(us), 840.0
+[CLEANUP], MinLatency(us), 840
+[CLEANUP], MaxLatency(us), 840
+[CLEANUP], 95thPercentileLatency(us), 840
+[CLEANUP], 99thPercentileLatency(us), 840
+[INSERT], Operations, 1000
+[INSERT], AverageLatency(us), 1158.687
+[INSERT], MinLatency(us), 304
+[INSERT], MaxLatency(us), 245503
+[INSERT], 95thPercentileLatency(us), 2163
+[INSERT], 99thPercentileLatency(us), 2999
+[INSERT], Return=OK, 1000

@@ -62,7 +62,7 @@ if [ "$insertproportion" -gt 0 ];
 then
     printf "#${x} latency\n" >> ./workloads/$workload/results-latency-insert.dat
 else
-    ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload/$workload -p mongodb.url='mongodb://mongo1:30001,mongo2:30002,mongo3:30003/ycsb?replicaSet=my-replica-set&w=majority' -p mongodb.writeConcern='majority' > ./workloads/$workload/outputs/outputLoad.txt
+    ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload/$workload -p mongodb.url='mongodb://mongo1:30001,mongo2:30002,mongo3:30003/ycsb?replicaSet=my-replica-set&w=1' -p mongodb.writeConcern='1' > ./workloads/$workload/outputs/outputLoad.txt
 fi
 
 # Execute the input workload for the input threads 
@@ -80,9 +80,9 @@ do
         if [ "$insertproportion" -gt 0 ];
         then
             python3 ./janitor.py
-            ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload/$workload -p mongodb.url='mongodb://mongo1:30001,mongo2:30002,mongo3:30003/ycsb?replicaSet=my-replica-set&w=majority' -p mongodb.writeConcern='majority' > ./workloads/$workload/outputs/outputLoad.txt
+            ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload/$workload -p mongodb.url='mongodb://mongo1:30001,mongo2:30002,mongo3:30003/ycsb?replicaSet=my-replica-set&w=1' -p mongodb.writeConcern='1' > ./workloads/$workload/outputs/outputLoad.txt
         fi
-        ./ycsb-0.17.0/bin/ycsb run mongodb-async -s -P ./workloads/$workload/$workload -threads $i -p mongodb.url='mongodb://mongo1:30001,mongo2:30002,mongo3:30003/ycsb?replicaSet=my-replica-set&w=majority' -p mongodb.writeConcern='majority' > ./workloads/$workload/outputs/outputRun$i-$j.txt
+        ./ycsb-0.17.0/bin/ycsb run mongodb-async -s -P ./workloads/$workload/$workload -threads $i -p mongodb.url='mongodb://mongo1:30001,mongo2:30002,mongo3:30003/ycsb?replicaSet=my-replica-set&w=1&readPreference=primary_preferred' -p mongodb.writeConcern='1' -p mongodb.readPreference='primary_preferred' > ./workloads/$workload/outputs/outputRun$i-$j.txt
         result=$(grep Throughput ./workloads/$workload/outputs/outputRun$i-$j.txt | awk '{print $3}')
         avg=$(echo "$avg $result" | awk '{print $1 + $2}')
 
@@ -141,7 +141,7 @@ do
 done
 
 # Build latency plot based on the operations executed
-latencyString="set xlabel 'Threads (#)'\nset ylabel 'Latency (ms)'\nset title '${workload} latency'\nplot "
+latencyString="set xlabel 'Client Threads (#)'\nset ylabel 'Latency (ms)'\nset title '${workload} latency'\nplot "
 for operation in ${operations[@]}; do
     case "${operation}" in
         read)
@@ -180,6 +180,6 @@ delta=$(java -jar esle-usl-1.0-SNAPSHOT.jar ./workloads/${workload}/results-thro
 kappa=$(java -jar esle-usl-1.0-SNAPSHOT.jar ./workloads/${workload}/results-throughput.dat | grep Lambda | awk '{print $6}')
 
 # Build gnuplot file
-printf "set terminal pdf\nset output './workloads/$workload/${workload}.pdf'\nset xlabel 'Threads (#)'\nset ylabel 'Throughput (ops/sec)'\nset title '${workload}'\nlambda = ${lambda}\ndelta = ${delta}\nkappa = ${kappa}\nusl(x) = (lambda*x)/(1 + delta*(x-1) + kappa*x*(x-1))\nplot usl(x) title 'theoretical', './workloads/${workload}/results-throughput.dat' using (\$1):(\$2) title 'experiment' with linespoints\n$latencyString" >> ./workloads/$workload/$workload.gp
+printf "set terminal pdf\nset output './workloads/$workload/${workload}.pdf'\nset xlabel 'Client Threads (#)'\nset ylabel 'Throughput (ops/sec)'\nset title '${workload}'\nlambda = ${lambda}\ndelta = ${delta}\nkappa = ${kappa}\nusl(x) = (lambda*x)/(1 + delta*(x-1) + kappa*x*(x-1))\nplot usl(x) title 'theoretical', './workloads/${workload}/results-throughput.dat' using (\$1):(\$2) title 'experiment' with linespoints\n$latencyString" >> ./workloads/$workload/$workload.gp
 gnuplot ./workloads/$workload/$workload.gp
 xdg-open ./workloads/$workload/$workload.pdf
