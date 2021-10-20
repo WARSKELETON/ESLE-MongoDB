@@ -39,6 +39,22 @@ Setup the workload and outputs folder:
 mkdir workloads/workload1 | mkdir workloads/workload1/outputs
 ```
 
+Add the servers to the /etc/hosts file using *nano*:
+(in /etc/hosts)
+```
+(...)
+127.0.0.1 mongo1
+127.0.0.1 mongo2
+127.0.0.1 mongo3
+```
+
+Install YCSB tool to the project root:
+
+```shell script
+curl -O --location https://github.com/brianfrankcooper/YCSB/releases/download/0.17.0/ycsb-0.17.0.tar.gz
+tar xfvz ycsb-0.17.0.tar.gz
+```
+
 Create the workload in the folder generated previously, workloads/workload1.
 
 Then, just run our runner script with the specific workload, in the root project folder:
