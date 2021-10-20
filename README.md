@@ -26,7 +26,7 @@
 | [results-latency-scan.dat](workloads/workload1/results-latency-scan.dat)     | Scan operation latency results |
 | [results-latency-update.dat](workloads/workload1/results-latency-update.dat)     | Update operation latency results |
 
-## How to run a workload? _(workload1 example)
+## How to run a workload? _(workload1 example)_
 In the project root folder, deploy with:
 
 ```shell script
