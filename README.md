@@ -84,6 +84,52 @@ Then, just run our runner script with the specific workload, in the root project
 This will run workload1 from 0 to 100 client threads in increments of 5, and will be repeating each run of the workload 3 times.
 
 ----
+## How to run unsing GCP? _(workload1 example)_
+
+
+Provision the infrastructure:
+
+```shell script
+cd gcp/terraform
+terraform apply
+```
+
+Connect to the cluster, like:
+
+```shell script
+get command from gcp: gcloud container clusters get-credentials test-kubernetes-327118-gke --region europe-west1 --project test-kubernetes-327118
+```
+
+To watch the creation of the pods (optional):
+
+```shell script
+watch -x kubectl get pods
+```
+
+Create StatefulSet and Service, and create the replica set:
+
+```shell script
+cd ../k8s
+
+kubectl apply -f mongo.yaml
+
+kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [ {_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017"}]});'
+```
+
+Run pod with runner image, and run the script:
+
+```shell script
+kubectl run runner --rm -it --image aaugusto11/ycsb -- /bin/bash
+./runner.sh -w workload1 -x throughput -y threads -n 12 -s 2 -r 1
+```
+
+Copy Workloads folder from the pod to the local environment:
+
+```shell script
+kubectl cp default/runner:/workloads ./results-pod -c runner
+```
+
+----
 ## Authors
 
 **Group 01**

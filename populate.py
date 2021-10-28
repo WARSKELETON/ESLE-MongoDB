@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from random import randint
 
-client = MongoClient('mongodb://mongo1:30001,mongo2:30002,mongo3:30003/db?replicaSet=my-replica-set')
+client = MongoClient('mongodb://mongo-0.mongo:27017,mongo-1.mongo:27017,mongo-2.mongo:27017/db')
 db = client.business
 print("Connection successful")
 
