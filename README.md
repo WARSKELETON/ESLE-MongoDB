@@ -62,6 +62,19 @@ mkdir workloads/workload1 | mkdir workloads/workload1/outputs
 
 Create the workload in the folder generated previously, workloads/workload1.
 
+Install *pymongo* python module through pip:
+
+```shell script
+pip3 install pymongo
+```
+
+Enable execute permissions to *runner-sh* and *ycsb*:
+
+```shell script
+sudo chmod +x ./runner.sh
+sudo chmod +x ycsb-0.17.0/bin/ycsb
+```
+
 Then, just run our runner script with the specific workload, in the root project folder:
 
 ```shell script
