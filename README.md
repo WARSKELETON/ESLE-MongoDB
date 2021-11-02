@@ -5,12 +5,12 @@
 | Module               |      Description      |
 | :------------------- | :-------------------: |
 | [gcp](gcp)     |  Google Cloud infrastructure module  |
-| [gcp](gcp/k8s)     |  MongoDB replica set kubernetes deployment module  |
-| [gcp](gcp/terraform)     |  Terraform GKE cluster module  |
+| [gcp/k8s](gcp/k8s)     |  MongoDB replica set kubernetes deployment module  |
+| [gcp/terraform](gcp/terraform)     |  Terraform GKE cluster module  |
 | [workloads](workloads)     |  Workload modules  |
 | [logs](logs)     |  Logs modules  |
 | [runner](runner.sh)     | Workload runner script |
-| [Dockerfile](Dockerfile)     | Runner dockerfile |
+| [Dockerfile](Dockerfile)     | Runner with ycsb dockerfile |
 | [Docker Compose File](docker-compose.yml)     | Docker Swarm cluster definition |
 | [concierge](concierge.sh) |   Workload module cleaner  |
 | [janitor](janitor.py)|    Database cleaner   |
