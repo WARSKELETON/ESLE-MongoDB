@@ -2,28 +2,46 @@
 
 usage () {
     cat << EOF
-Usage: runner.sh -w {workload_name} -x {x} -y {y} -n {max_client_threads} -s {step} -r {repetitions}
+Usage: runner.sh -w {workload_name} -c {cloud} -x {x} -n {max_client_threads} -s {step} -r {repetitions} -c {cloud}
 EOF
 }
 
 operations=("read" "update" "scan" "insert")
 
 # Handle input flags
-while getopts w:x:y:n:s:r: flag
+while getopts w:c:x:n:s:r: flag
 do
     case "${flag}" in
         w) workload=${OPTARG};;
+        c) cloud=${OPTARG};;
         x) x=${OPTARG};;
-        y) y=${OPTARG};;
         n) n=${OPTARG};;
         s) step=${OPTARG};;
         r) repetitions=${OPTARG};;
     esac
 done
 
+# Initialize base MongoDB connection string
+connectionString="mongodb://mongo1:30001,mongo2:30002,mongo3:30003/ycsb?replicaSet=my-replica-set"
+cleanerConnectionString="mongodb://mongo1:30001,mongo2:30002,mongo3:30003/db?replicaSet=my-replica-set"
+if [ "$cloud" -gt 0 ];
+then
+    connectionString="mongodb://mongo-0.mongo:27017,mongo-1.mongo:27017,mongo-2.mongo:27017/ycsb?replicaSet=rs0"
+    cleanerConnectionString="mongodb://mongo-0.mongo:27017,mongo-1.mongo:27017,mongo-2.mongo:27017/db?replicaSet=rs0"
+fi
+
 # Call concierge to clean workload environment
 ./concierge.sh -w $workload
-python3 ./janitor.py
+python ./janitor.py $cleanerConnectionString
+
+# Initialize load and run MongoDB connection string
+loadString=$connectionString"&w=1"
+runString=$connectionString"&w=1&readPreference=primary_preferred"
+
+echo $connectionString
+echo $cleanerConnectionString
+echo $loadString
+echo $runString
 
 # Determine workload's operations
 readproportion=$(grep readproportion ./workloads/$workload/$workload | awk -F'=' '{print $2}')
@@ -36,7 +54,7 @@ insertproportion=$(grep insertproportion ./workloads/$workload/$workload | awk -
 insertproportion=$(echo $insertproportion '>' 0.0 | bc -l)
 
 # Initialize data files for workload's operations
-printf "#${x} ${y}\n" >> ./workloads/$workload/results-throughput.dat
+printf "#${x} throughput\n" >> ./workloads/$workload/results-throughput.dat
 
 if [ "$readproportion" -gt 0 ];
 then
@@ -57,7 +75,7 @@ if [ "$insertproportion" -gt 0 ];
 then
     printf "#${x} latency\n" >> ./workloads/$workload/results-latency-insert.dat
 else
-    ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload/$workload -p mongodb.url='mongodb://mongo1:30001,mongo2:30002,mongo3:30003/ycsb?replicaSet=my-replica-set&w=1' -p mongodb.writeConcern='1' > ./workloads/$workload/outputs/outputLoad.txt
+    ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload/$workload -p mongodb.url=$loadString -p mongodb.writeConcern='1' > ./workloads/$workload/outputs/outputLoad.txt
 fi
 
 # Execute the input workload for the input threads 
@@ -74,10 +92,10 @@ do
     do
         if [ "$insertproportion" -gt 0 ];
         then
-            python3 ./janitor.py
-            ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload/$workload -p mongodb.url='mongodb://mongo1:30001,mongo2:30002,mongo3:30003/ycsb?replicaSet=my-replica-set&w=1' -p mongodb.writeConcern='1' > ./workloads/$workload/outputs/outputLoad.txt
+            python ./janitor.py $cleanerConnectionString
+            ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload/$workload -p mongodb.url=$loadString -p mongodb.writeConcern='1' > ./workloads/$workload/outputs/outputLoad.txt
         fi
-        ./ycsb-0.17.0/bin/ycsb run mongodb-async -s -P ./workloads/$workload/$workload -threads $i -p mongodb.url='mongodb://mongo1:30001,mongo2:30002,mongo3:30003/ycsb?replicaSet=my-replica-set&w=1&readPreference=primary_preferred' -p mongodb.writeConcern='1' -p mongodb.readPreference='primary_preferred' > ./workloads/$workload/outputs/outputRun$i-$j.txt
+        ./ycsb-0.17.0/bin/ycsb run mongodb-async -s -P ./workloads/$workload/$workload -threads $i -p mongodb.url=$runString -p mongodb.writeConcern='1' -p mongodb.readPreference='primary_preferred' > ./workloads/$workload/outputs/outputRun$i-$j.txt
         result=$(grep Throughput ./workloads/$workload/outputs/outputRun$i-$j.txt | awk '{print $3}')
         avg=$(echo "$avg $result" | awk '{print $1 + $2}')
 

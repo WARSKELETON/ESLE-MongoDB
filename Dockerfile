@@ -5,9 +5,9 @@ ENV URL https://github.com/brianfrankcooper/YCSB/releases/download/0.17.0/ycsb-0
 
 RUN wget -qO- $URL | tar zxv -C / && ln -nsf /ycsb* /ycsb
 
-ADD runner-cloud.sh ./runner.sh
+ADD runner.sh ./runner.sh
 ADD concierge.sh ./
-ADD janitor-cloud.py ./janitor.py
+ADD janitor.py ./janitor.py
 ADD workloads ./workloads
 ADD populate.py ./
 ADD esle-usl-1.0-SNAPSHOT.jar ./

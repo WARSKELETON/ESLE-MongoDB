@@ -4,10 +4,14 @@
 
 | Module               |      Description      |
 | :------------------- | :-------------------: |
+| [gcp](gcp)     |  Google Cloud infrastructure module  |
+| [gcp](gcp/k8s)     |  MongoDB replica set kubernetes deployment module  |
+| [gcp](gcp/terraform)     |  Terraform GKE cluster module  |
 | [workloads](workloads)     |  Workload modules  |
 | [logs](logs)     |  Logs modules  |
 | [runner](runner.sh)     | Workload runner script |
-| [Docker Compose File](docker-compose.yml)     | Docker cluster definition |
+| [Dockerfile](Dockerfile)     | Runner dockerfile |
+| [Docker Compose File](docker-compose.yml)     | Docker Swarm cluster definition |
 | [concierge](concierge.sh) |   Workload module cleaner  |
 | [janitor](janitor.py)|    Database cleaner   |
 | [moca](moca.py)     |      Our own benchmark tool attempt       |
@@ -27,7 +31,7 @@
 | [results-latency-scan.dat](workloads/workload1/results-latency-scan.dat)     | Scan operation latency results |
 | [results-latency-update.dat](workloads/workload1/results-latency-update.dat)     | Update operation latency results |
 
-## How to setup MongoDB cluster? _(PSS Architecture)_
+## How to setup a local MongoDB cluster? _(PSS Architecture)_
 In the project root folder, deploy with:
 
 ```shell script
@@ -78,13 +82,13 @@ sudo chmod +x ycsb-0.17.0/bin/ycsb
 Then, just run our runner script with the specific workload, in the root project folder:
 
 ```shell script
-./runner.sh -w workload1 -x threads -y ops -n 100 -s 5 -r 3
+./runner.sh -w workload1 -c 0 -x threads -n 100 -s 5 -r 3
 ```
 
-This will run workload1 from 0 to 100 client threads in increments of 5, and will be repeating each run of the workload 3 times.
+This will run workload1, locally (-c 0), from 0 to 100 client threads in increments of 5, and will be repeating each run of the workload 3 times.
 
 ----
-## How to run unsing GCP? _(workload1 example)_
+## How to run using GCP? _(workload1 example)_
 
 
 Provision the infrastructure:
@@ -115,12 +119,27 @@ kubectl apply -f mongo.yaml
 
 kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [ {_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017"}]});'
 ```
-
-Run pod with runner image, and run the script:
+Run pod with our runner image hosted @ dockerhub:
 
 ```shell script
 kubectl run runner --rm -it --image aaugusto11/ycsb -- /bin/bash
-./runner.sh -w workload1 -x throughput -y threads -n 12 -s 2 -r 1
+./runner.sh -w workload1 -c 1 -x throughput -n 12 -s 2 -r 1
+```
+
+Or build a local image of runner and run the pod:
+
+```shell script
+cd ../../
+
+docker build -t ycsb:latest .
+
+kubectl run runner --rm -it --image ycsb:latest --image-pull-policy=Never -- /bin/bash
+```
+
+Run the script:
+
+```shell script
+./runner.sh -w workload1 -c 1 -x throughput -n 12 -s 2 -r 1
 ```
 
 Copy Workloads folder from the pod to the local environment:
