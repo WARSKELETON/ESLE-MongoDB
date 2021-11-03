@@ -98,10 +98,10 @@ cd gcp/terraform
 terraform apply
 ```
 
-Connect to the cluster, like:
+Connect to the cluster by getting the command line access from GCP console, like:
 
 ```shell script
-get command from gcp: gcloud container clusters get-credentials test-kubernetes-327118-gke --region europe-west1 --project test-kubernetes-327118
+gcloud container clusters get-credentials test-kubernetes-327118-gke --region europe-west1 --project test-kubernetes-327118
 ```
 
 To watch the creation of the pods (optional):
@@ -119,21 +119,20 @@ kubectl apply -f mongo.yaml
 
 kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [ {_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017"}]});'
 ```
-Run pod with our runner image hosted @ dockerhub:
+Run pod with our ycsb image hosted @ dockerhub:
 
 ```shell script
-kubectl run runner --rm -it --image aaugusto11/ycsb -- /bin/bash
-./runner.sh -w workload1 -c 1 -x throughput -n 12 -s 2 -r 1
+kubectl run ycsb --rm -it --image aaugusto11/ycsb -- /bin/bash
 ```
 
-Or build a local image of runner and run the pod:
+Or build a local image of ycsb and run the pod:
 
 ```shell script
 cd ../../
 
 docker build -t ycsb:latest .
 
-kubectl run runner --rm -it --image ycsb:latest --image-pull-policy=Never -- /bin/bash
+kubectl run ycsb --rm -it --image ycsb:latest --image-pull-policy=Never -- /bin/bash
 ```
 
 Run the script:

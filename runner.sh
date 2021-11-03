@@ -32,11 +32,11 @@ fi
 
 # Call concierge to clean workload environment
 ./concierge.sh -w $workload
-python ./janitor.py $cleanerConnectionString
+python2 ./janitor.py $cleanerConnectionString
 
 # Initialize load and run MongoDB connection string
 loadString=$connectionString"&w=1"
-runString=$connectionString"&w=1&readPreference=primary_preferred"
+runString=$connectionString"&w=majority"
 
 echo $connectionString
 echo $cleanerConnectionString
@@ -75,7 +75,7 @@ if [ "$insertproportion" -gt 0 ];
 then
     printf "#${x} latency\n" >> ./workloads/$workload/results-latency-insert.dat
 else
-    ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload/$workload -p mongodb.url=$loadString -p mongodb.writeConcern='1' > ./workloads/$workload/outputs/outputLoad.txt
+    ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload/$workload -p mongodb.url=$loadString > ./workloads/$workload/outputs/outputLoad.txt
 fi
 
 # Execute the input workload for the input threads 
@@ -92,10 +92,10 @@ do
     do
         if [ "$insertproportion" -gt 0 ];
         then
-            python ./janitor.py $cleanerConnectionString
-            ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload/$workload -p mongodb.url=$loadString -p mongodb.writeConcern='1' > ./workloads/$workload/outputs/outputLoad.txt
+            python2 ./janitor.py $cleanerConnectionString
+            ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload/$workload -p mongodb.url=$loadString > ./workloads/$workload/outputs/outputLoad.txt
         fi
-        ./ycsb-0.17.0/bin/ycsb run mongodb-async -s -P ./workloads/$workload/$workload -threads $i -p mongodb.url=$runString -p mongodb.writeConcern='1' -p mongodb.readPreference='primary_preferred' > ./workloads/$workload/outputs/outputRun$i-$j.txt
+        ./ycsb-0.17.0/bin/ycsb run mongodb-async -s -P ./workloads/$workload/$workload -threads $i -p mongodb.url=$runString -p mongodb.readPreference='primary_preferred' > ./workloads/$workload/outputs/outputRun$i-$j.txt
         result=$(grep Throughput ./workloads/$workload/outputs/outputRun$i-$j.txt | awk '{print $3}')
         avg=$(echo "$avg $result" | awk '{print $1 + $2}')
 
@@ -195,4 +195,8 @@ kappa=$(java -jar esle-usl-1.0-SNAPSHOT.jar ./workloads/${workload}/results-thro
 # Build gnuplot file
 printf "set terminal pdf\nset output './workloads/$workload/${workload}.pdf'\nset xlabel 'Client Threads (#)'\nset ylabel 'Throughput (ops/sec)'\nset title '${workload}'\nlambda = ${lambda}\ndelta = ${delta}\nkappa = ${kappa}\nusl(x) = (lambda*x)/(1 + delta*(x-1) + kappa*x*(x-1))\nplot usl(x) title 'theoretical', './workloads/${workload}/results-throughput.dat' using (\$1):(\$2) title 'experiment' with linespoints\n$latencyString" >> ./workloads/$workload/$workload.gp
 gnuplot ./workloads/$workload/$workload.gp
-xdg-open ./workloads/$workload/$workload.pdf
+
+if [ "$cloud" = 0 ];
+then
+    xdg-open ./workloads/$workload/$workload.pdf
+fi

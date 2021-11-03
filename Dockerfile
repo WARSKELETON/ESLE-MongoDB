@@ -3,7 +3,7 @@ RUN apk --no-cache add python2 wget openssl ca-certificates && update-ca-certifi
 
 ENV URL https://github.com/brianfrankcooper/YCSB/releases/download/0.17.0/ycsb-0.17.0.tar.gz
 
-RUN wget -qO- $URL | tar zxv -C / && ln -nsf /ycsb* /ycsb
+RUN wget -qO- $URL | tar zxv -C /
 
 ADD runner.sh ./runner.sh
 ADD concierge.sh ./
