@@ -2,14 +2,14 @@
 
 usage () {
     cat << EOF
-Usage: runner.sh -w {workload_name} -e {experiment_id} -i {experiment_iterations} -c {cloud} -x {x} -m {min_client_threads} -n {max_client_threads} -s {step} -r {repetitions} -c {cloud}
+Usage: runner.sh -w {workload_name} -e {experiment_id} -i {experiment_iterations} -c {cloud} -x {x} -m {min_client_threads} -n {max_client_threads} -s {step} -r {repetitions} -W {write_concern} -R {read_concern} -P {write_concern}
 EOF
 }
 
 operations=("read" "update" "scan" "insert")
 
 # Handle input flags
-while getopts w:e:i:c:x:m:n:s:r: flag
+while getopts w:e:i:c:x:m:n:s:r:W:R:P: flag
 do
     case "${flag}" in
         w) workload=${OPTARG};;
@@ -21,6 +21,9 @@ do
         n) n=${OPTARG};;
         s) step=${OPTARG};;
         r) repetitions=${OPTARG};;
+        W) writeConcern=${OPTARG};;
+        R) readConcern=${OPTARG};;
+        P) readPreference=${OPTARG};;
     esac
 done
 
@@ -39,7 +42,7 @@ python2 ./janitor.py $cleanerConnectionString
 
 # Initialize load and run MongoDB connection string
 loadString=$connectionString"w=1"
-runString=$connectionString"readPreference=secondaryPreferred&readConcernLevel=majority&w=majority"
+runString=$connectionString"w="$writeConcern"&readConcernLevel="$readConcern"&readPreference="$readPreference
 
 echo $connectionString
 echo $cleanerConnectionString
