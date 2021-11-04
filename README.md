@@ -117,7 +117,12 @@ cd ../k8s
 
 kubectl apply -f mongo.yaml
 
-kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [ {_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017"}]});'
+kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [ {_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017"}], settings: {chainingAllowed: false}});'
+
+kubectl exec mongo-0 -- mongo --eval 'rs.status();'
+
+kubectl exec mongo-2 -- mongo --eval 'db.adminCommand( { replSetSyncFrom: "mongo-1.mongo:27017" });'
+
 ```
 Run pod with our ycsb image hosted @ dockerhub:
 
@@ -138,13 +143,13 @@ kubectl run ycsb --rm -it --image ycsb:latest --image-pull-policy=Never -- /bin/
 Run the script:
 
 ```shell script
-./runner.sh -w workload1 -c 1 -x throughput -n 12 -s 2 -r 1
+./runner.sh -w workload1 -e experiment1 -i 5 -c 1 -x throughput -m 16 -n 16 -s 1 -r 3
 ```
 
 Copy Workloads folder from the pod to the local environment:
 
 ```shell script
-kubectl cp default/runner:/workloads ./results-pod -c runner
+kubectl cp default/ycsb:/experiments/experiment1 ./results/experiment1 -c ycsb
 ```
 
 ----

@@ -1,19 +1,14 @@
 #!/bin/bash
 
-declare -a threads=(1 2 4 8 16 32)
-
-while getopts w: flag
+while getopts e: flag
 do
     case "${flag}" in
-        w) workload=${OPTARG};;
+        e) experiment=${OPTARG};;
     esac
 done
 
 echo '[CONCIERGE] STARTING CLEANING PROCESS'
 
-rm ./workloads/$workload/outputs/*.txt
-rm ./workloads/$workload/*.gp
-rm ./workloads/$workload/*.dat
-rm ./workloads/$workload/*.pdf
+rm -R -- ./experiments/$experiment/*
 
 echo '[CONCIERGE] DO YOU SMELL THAT? THE SMELL OF CLEAN\nI AM DONE SIR'
