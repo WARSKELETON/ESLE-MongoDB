@@ -17,6 +17,18 @@
 | [moca](moca.py)     |      Our own benchmark tool attempt       |
 | [populate](populate.py)     |      Populate database script       |
 
+## 7 Factors with 2 Levels
+
+| Factor               |      Level -1         |      Level 1         |
+| :------------------- | :-------------------: | :-------------------: |
+| [Replica Node Configuration (A)](#replica-node-configuration)     |  Primary-Secondary-Secondary  | Primary-Secondary-Arbiter  | 
+| [Write Concern (B)](#write-concern-read-concern-read-preference)     |  Majority  | 1 Ack  |
+| [Read Concern (C)](#write-concern-read-concern-read-preference)     |  1 Ack  | Majority |
+| [Read Preference (D)](#write-concern-read-concern-read-preference)     |  Primary Preferred  | Secondary Preferred |
+| [Chaining (E)](#chaining)     |  Disabled  | Enabled |
+| [Replica Writer Thread Range (F)](#replica-writer-thread-range-replica-batch-limit)     | [0:16] Threads | [0:128] Threads |
+| [Replica Batch Limit (G)](#replica-writer-thread-range-replica-batch-limit)     | 50MB | 100MB |
+
 ## Workload Struture (Example)
 
 | Module               |      Description      |
@@ -31,7 +43,7 @@
 | [results-latency-scan.dat](workloads/workload1/results-latency-scan.dat)     | Scan operation latency results |
 | [results-latency-update.dat](workloads/workload1/results-latency-update.dat)     | Update operation latency results |
 
-## How to setup a local MongoDB cluster? _(PSS Architecture)_
+## How to setup a local MongoDB cluster, using Docker Swarm? _(PSS Architecture)_
 In the project root folder, deploy with:
 
 ```shell script
@@ -47,7 +59,125 @@ Add the servers to the /etc/hosts file using *nano*:
 127.0.0.1 mongo3
 ```
 
-## How to setup YCSB? 
+## How to switch the different factors?
+
+### Replica Node Configuration
+
+#### Primary-Secondary-Secondary (Level -1)
+
+Create the replica set:
+
+```
+kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [ {_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017"}], settings: {chainingAllowed: false}});'
+```
+
+#### Primary-Secondary-Arbiter (Level 1)
+
+### Write Concern, Read Concern, Read Preference
+
+All of these 3 factors are given directly to our runner script, as they are part of the MongoDB connection string per client request:
+
+```shell script
+./runner.sh <other-flags> -W <write-concern> -R <read-concern> -P <read-preference>
+```
+
+#### Write Concern _Majority_ (Level -1)
+
+```shell script
+-W majority
+```
+
+#### Write Concern _1 Ack_ (Level 1)
+
+```shell script
+-W 1
+```
+
+#### Read Concern _1 Ack_ (Level -1)
+
+```shell script
+-R local
+```
+
+#### Read Concern _Majority_ (Level 1)
+
+```shell script
+-R majority
+```
+
+#### Read Preference _Primary Preferred_ (Level -1)
+
+```shell script
+-P primaryPreferred
+```
+
+#### Read Preference _Secondary Preferred_ (Level 1)
+
+```shell script
+-P secondaryPreferred
+```
+
+### Chaining
+
+#### Chaining Disabled (Level -1)
+
+Simply create the replica set with the setting _chainingAllowed_ set to false _(members array is redacted for legibility reasons)_:
+
+```shell script
+kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [...], settings: {chainingAllowed: false}});'
+```
+
+#### Chaining Allowed (Level 1)
+
+Create the replica set with the setting _chainingAllowed_ set to true _(members array is redacted for legibility reasons)_:
+
+```shell script
+kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [...], settings: {chainingAllowed: true}});'
+```
+
+And force one of the secondaries to utilize the other secondary as its sync source, in this example we are forcing mongo-2 to sync from mongo-1 and mongo-0 is the primary:
+
+```shell script
+kubectl exec mongo-2 -- mongo --eval 'db.adminCommand( { replSetSyncFrom: "mongo-1.mongo:27017" });'
+```
+
+### Replica Writer Thread Range, Replica Batch Limit
+
+All of these 2 factors are setup in the MongoDB kubernetes deployment yaml file, as server parameters.
+
+#### Replica Writer Thread Range _[0:16] Threads_ (Level -1)
+
+```yaml
+        - "--setParameter"
+        - "replWriterMinThreadCount=0"
+        - "--setParameter"
+        - "replWriterThreadCount=16"
+```
+
+#### Replica Writer Thread Range _[0:128] Threads_ (Level 1)
+
+```yaml
+        - "--setParameter"
+        - "replWriterMinThreadCount=0"
+        - "--setParameter"
+        - "replWriterThreadCount=128"
+```
+
+#### Replica Batch Limit _50MB_ (Level -1)
+
+```yaml
+        - "--setParameter"
+        - "replBatchLimitBytes=52428800"
+```
+
+#### Replica Batch Limit _100MB_ (Level 1)
+
+```yaml
+        - "--setParameter"
+        - "replBatchLimitBytes=104857600"
+```
+
+## How to setup YCSB? _(through source)_
 
 Install YCSB tool to the project root:
 
