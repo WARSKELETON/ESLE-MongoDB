@@ -16,6 +16,8 @@
 | [janitor](janitor.py)|    Database cleaner   |
 | [moca](moca.py)     |      Our own benchmark tool attempt       |
 | [populate](populate.py)     |      Populate database script       |
+| [results-aggregator](results-aggregator.py)     |      Tool for experiment's results aggregation       |
+| [get_results](get_results.sh)     |      Copies experiment from the cloud environment and aggregates results       |
 
 ## 7 Factors with 2 Levels
 
