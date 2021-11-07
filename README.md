@@ -16,6 +16,9 @@
 | [janitor](janitor.py)|    Database cleaner   |
 | [moca](moca.py)     |      Our own benchmark tool attempt       |
 | [populate](populate.py)     |      Populate database script       |
+| [results-aggregator](results-aggregator.py)     |      Tool for experiment's results aggregation       |
+| [get_results](get_results.sh)     |      Copies experiment from the cloud environment and aggregates results       |
+| [rebuild_pods](rebuild_pods.sh)     |      Rebuild MongoDB Kubernetes Service       |
 
 ## 7 Factors with 2 Levels
 
@@ -65,13 +68,19 @@ Add the servers to the /etc/hosts file using *nano*:
 
 #### Primary-Secondary-Secondary (Level -1)
 
-Create the replica set:
+Create the replica set, for example replica set named "_rs0_" with mongo-0 as primary, mongo-1 and mongo-2 as secondaries:
 
 ```
-kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [ {_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017"}], settings: {chainingAllowed: false}});'
+kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [{_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017"}]});'
 ```
 
 #### Primary-Secondary-Arbiter (Level 1)
+
+Create the replica set, for example replica set named "_rs0_" with mongo-0 as primary, mongo-1 as secondary and mongo-2 as arbiter:
+
+```
+kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [{_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017", arbiterOnly: true}]});'
+```
 
 ### Write Concern, Read Concern, Read Preference
 
