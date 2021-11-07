@@ -1,0 +1,25 @@
+mongo connection created with mongodb://mongo-0.mongo:27017,mongo-1.mongo:27017,mongo-2.mongo:27017/ycsb?w=1
+[OVERALL], RunTime(ms), 2291
+[OVERALL], Throughput(ops/sec), 436.4906154517678
+[TOTAL_GCS_Copy], Count, 0
+[TOTAL_GC_TIME_Copy], Time(ms), 0
+[TOTAL_GC_TIME_%_Copy], Time(%), 0.0
+[TOTAL_GCS_MarkSweepCompact], Count, 0
+[TOTAL_GC_TIME_MarkSweepCompact], Time(ms), 0
+[TOTAL_GC_TIME_%_MarkSweepCompact], Time(%), 0.0
+[TOTAL_GCs], Count, 0
+[TOTAL_GC_TIME], Time(ms), 0
+[TOTAL_GC_TIME_%], Time(%), 0.0
+[CLEANUP], Operations, 1
+[CLEANUP], AverageLatency(us), 2073.0
+[CLEANUP], MinLatency(us), 2072
+[CLEANUP], MaxLatency(us), 2073
+[CLEANUP], 95thPercentileLatency(us), 2073
+[CLEANUP], 99thPercentileLatency(us), 2073
+[INSERT], Operations, 1000
+[INSERT], AverageLatency(us), 2169.78
+[INSERT], MinLatency(us), 1074
+[INSERT], MaxLatency(us), 143615
+[INSERT], 95thPercentileLatency(us), 3157
+[INSERT], 99thPercentileLatency(us), 5615
+[INSERT], Return=OK, 1000
