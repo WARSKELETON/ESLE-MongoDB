@@ -39,15 +39,15 @@ spec:
         - "--bind_ip_all"
         - "--replSet"
         - rs0
-        - "--profile"
-        - "2"
-        - "-vvvvv"
+        # - "--profile"
+        # - "2"
+        # - "-vvvvv"
         - "--setParameter"
         - "replWriterMinThreadCount=0"
         - "--setParameter"
-        - "replWriterThreadCount=16"
+        - "replWriterThreadCount=128"
         - "--setParameter"
-        - "replBatchLimitBytes=104857600"
+        - "replBatchLimitBytes=52428800"
         ports:
         - containerPort: 27017
         volumeMounts:

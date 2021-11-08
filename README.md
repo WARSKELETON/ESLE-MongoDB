@@ -46,6 +46,11 @@
 | [results-latency-scan.dat](workloads/workload1/results-latency-scan.dat)     | Scan operation latency results |
 | [results-latency-update.dat](workloads/workload1/results-latency-update.dat)     | Update operation latency results |
 
+USL1 -> load sync | run sync w=majority
+
+USL2 -> load sync | run sync w=1
+
+
 ## How to setup a local MongoDB cluster, using Docker Swarm? _(PSS Architecture)_
 In the project root folder, deploy with:
 

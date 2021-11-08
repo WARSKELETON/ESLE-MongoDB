@@ -1,0 +1,17 @@
+0.15
+0.5
+0.2
+0.15
+('Avg iteration', 1, ':', 9651.548999999999)
+('Avg iteration', 2, ':', 10341.3)
+('Avg iteration', 3, ':', 9996.626)
+('Avg iteration', 4, ':', 9792.729)
+('Avg iteration', 5, ':', 10377.455)
+('Average Latency (', 'workload1', 'experiment7', '):', 10031.9318)
+()
+('Throughput iteration', 1, ':', 1480.19)
+('Throughput iteration', 2, ':', 1438.32)
+('Throughput iteration', 3, ':', 1465.71)
+('Throughput iteration', 4, ':', 1491.79)
+('Throughput iteration', 5, ':', 1443.27)
+('Average throughput', ':', 1463.8560000000002)

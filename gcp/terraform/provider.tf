@@ -1,7 +1,11 @@
 provider "google" {
-  project = var.project_id
-  region  = var.region
+  # Create/Download your credentials from:
+  # Google Console -> "APIs & services -> Credentials"
+  credentials = file("./test-kubernetes-327118.json")
+  project     = var.project_id
+  region      = var.region
 }
+
 
 provider "kubernetes" {
   host = "https://${google_container_cluster.primary.endpoint}"
