@@ -7,7 +7,12 @@
 | [gcp](gcp)     |  Google Cloud infrastructure module  |
 | [gcp/k8s](gcp/k8s)     |  MongoDB replica set kubernetes deployment module  |
 | [gcp/terraform](gcp/terraform)     |  Terraform GKE cluster module  |
-| [workloads](workloads)     |  Workload modules  |
+| [results-usl](results-usl)     |      Final scalability results with the factor write concern       |
+| [results-v4](results-v4)     |      Final experiment results with 7 factors and 2 levels (5 repetitions)       |
+| [results-v3](results-v3)     |      Third experimental results attempt with 7 factors and 2 levels (5 repetitions)       |
+| [results-v2](results-v2)     |      Second experimental results attempt with 7 factors and 2 levels (5 repetitions)       |
+| [results-v1](results-v1)     |      First experimental results attempt with 7 factors and 2 levels (5 repetitions)       |
+| [workloads](workloads)     |  Workload definition files  |
 | [logs](logs)     |  Logs modules  |
 | [runner](runner.sh)     | Workload runner script |
 | [Dockerfile](Dockerfile)     | Runner with ycsb dockerfile |
@@ -24,13 +29,13 @@
 
 | Factor               |      Level -1         |      Level 1         |
 | :------------------- | :-------------------: | :-------------------: |
-| [Replica Node Configuration (A)](#replica-node-configuration)     |  Primary-Secondary-Secondary  | Primary-Secondary-Arbiter  | 
-| [Write Concern (B)](#write-concern-read-concern-read-preference)     |  Majority  | 1 Ack  |
+| [Write Concern (A)](#write-concern-read-concern-read-preference)     |  Majority  | 1 Ack  |
+| [Replica Writer Thread Range (B)](#replica-writer-thread-range-replica-batch-limit)     | [0:16] Threads | [0:128] Threads |
 | [Read Concern (C)](#write-concern-read-concern-read-preference)     |  1 Ack  | Majority |
 | [Read Preference (D)](#write-concern-read-concern-read-preference)     |  Primary Preferred  | Secondary Preferred |
-| [Chaining (E)](#chaining)     |  Disabled  | Enabled |
-| [Replica Writer Thread Range (F)](#replica-writer-thread-range-replica-batch-limit)     | [0:16] Threads | [0:128] Threads |
-| [Replica Batch Limit (G)](#replica-writer-thread-range-replica-batch-limit)     | 50MB | 100MB |
+| [Replica Batch Limit (E)](#replica-writer-thread-range-replica-batch-limit)     | 50MB | 100MB |
+| [Replica Node Configuration (F)](#replica-node-configuration)     |  Primary-Secondary-Secondary  | Primary-Secondary-Arbiter  | 
+| [Chaining (G)](#chaining)     |  Disabled  | Enabled |
 
 ## Workload Struture (Example)
 
@@ -45,10 +50,6 @@
 | [results-latency-read.dat](workloads/workload1/results-latency-read.dat)     | Read operation latency results |
 | [results-latency-scan.dat](workloads/workload1/results-latency-scan.dat)     | Scan operation latency results |
 | [results-latency-update.dat](workloads/workload1/results-latency-update.dat)     | Update operation latency results |
-
-USL1 -> load sync | run sync w=majority
-
-USL2 -> load sync | run sync w=1
 
 
 ## How to setup a local MongoDB cluster, using Docker Swarm? _(PSS Architecture)_
@@ -68,24 +69,6 @@ Add the servers to the /etc/hosts file using *nano*:
 ```
 
 ## How to switch the different factors?
-
-### Replica Node Configuration
-
-#### Primary-Secondary-Secondary (Level -1)
-
-Create the replica set, for example replica set named "_rs0_" with mongo-0 as primary, mongo-1 and mongo-2 as secondaries:
-
-```
-kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [{_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017"}]});'
-```
-
-#### Primary-Secondary-Arbiter (Level 1)
-
-Create the replica set, for example replica set named "_rs0_" with mongo-0 as primary, mongo-1 as secondary and mongo-2 as arbiter:
-
-```
-kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [{_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017", arbiterOnly: true}]});'
-```
 
 ### Write Concern, Read Concern, Read Preference
 
@@ -131,30 +114,6 @@ All of these 3 factors are given directly to our runner script, as they are part
 -P secondaryPreferred
 ```
 
-### Chaining
-
-#### Chaining Disabled (Level -1)
-
-Simply create the replica set with the setting _chainingAllowed_ set to false _(members array is redacted for legibility reasons)_:
-
-```shell script
-kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [...], settings: {chainingAllowed: false}});'
-```
-
-#### Chaining Allowed (Level 1)
-
-Create the replica set with the setting _chainingAllowed_ set to true _(members array is redacted for legibility reasons)_:
-
-```shell script
-kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [...], settings: {chainingAllowed: true}});'
-```
-
-And force one of the secondaries to utilize the other secondary as its sync source, in this example we are forcing mongo-2 to sync from mongo-1 and mongo-0 is the primary:
-
-```shell script
-kubectl exec mongo-2 -- mongo --eval 'db.adminCommand( { replSetSyncFrom: "mongo-1.mongo:27017" });'
-```
-
 ### Replica Writer Thread Range, Replica Batch Limit
 
 All of these 2 factors are setup in the MongoDB kubernetes deployment yaml file, as server parameters.
@@ -189,6 +148,48 @@ All of these 2 factors are setup in the MongoDB kubernetes deployment yaml file,
 ```yaml
         - "--setParameter"
         - "replBatchLimitBytes=104857600"
+```
+
+### Replica Node Configuration
+
+#### Primary-Secondary-Secondary (Level -1)
+
+Create the replica set, for example replica set named "_rs0_" with mongo-0 as primary, mongo-1 and mongo-2 as secondaries:
+
+```
+kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [{_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017"}]});'
+```
+
+#### Primary-Secondary-Arbiter (Level 1)
+
+Create the replica set, for example replica set named "_rs0_" with mongo-0 as primary, mongo-1 as secondary and mongo-2 as arbiter:
+
+```
+kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [{_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017", arbiterOnly: true}]});'
+```
+
+### Chaining
+
+#### Chaining Disabled (Level -1)
+
+Simply create the replica set with the setting _chainingAllowed_ set to false _(members array is redacted for legibility reasons)_:
+
+```shell script
+kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [...], settings: {chainingAllowed: false}});'
+```
+
+#### Chaining Allowed (Level 1)
+
+Create the replica set with the setting _chainingAllowed_ set to true _(members array is redacted for legibility reasons)_:
+
+```shell script
+kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [...], settings: {chainingAllowed: true}});'
+```
+
+And force one of the secondaries to utilize the other secondary as its sync source, in this example we are forcing mongo-2 to sync from mongo-1 and mongo-0 is the primary:
+
+```shell script
+kubectl exec mongo-2 -- mongo --eval 'db.adminCommand( { replSetSyncFrom: "mongo-1.mongo:27017" });'
 ```
 
 ## How to setup YCSB? _(through source)_
