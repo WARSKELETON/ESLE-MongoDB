@@ -89,7 +89,7 @@ do
     then
         printf "#${x} latency\n" >> ./experiments/$experiment/iteration$iter/results-latency-insert.dat
     else
-        ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload -p mongodb.url=$loadString > ./experiments/$experiment/iteration$iter/outputs/outputLoad.txt
+        ./ycsb-0.17.0/bin/ycsb load mongodb -s -P ./workloads/$workload -p mongodb.url=$loadString > ./experiments/$experiment/iteration$iter/outputs/outputLoad.txt
     fi
 
 
@@ -110,7 +110,7 @@ do
             if [ "$insertproportion" -gt 0 ];
             then
                 python2 ./janitor.py $cleanerConnectionString
-                ./ycsb-0.17.0/bin/ycsb load mongodb-async -s -P ./workloads/$workload -p mongodb.url=$loadString > ./experiments/$experiment/iteration$iter/outputs/outputLoad.txt
+                ./ycsb-0.17.0/bin/ycsb load mongodb -s -P ./workloads/$workload -p mongodb.url=$loadString > ./experiments/$experiment/iteration$iter/outputs/outputLoad.txt
             fi
             ./ycsb-0.17.0/bin/ycsb run mongodb -s -P ./workloads/$workload -threads $i -p mongodb.url=$runString > ./experiments/$experiment/iteration$iter/outputs/outputRun$i-$j.txt
             result=$(grep Throughput ./experiments/$experiment/iteration$iter/outputs/outputRun$i-$j.txt | awk '{print $3}')

@@ -8,6 +8,8 @@
 | [gcp/k8s](gcp/k8s)     |  MongoDB replica set kubernetes deployment module  |
 | [gcp/terraform](gcp/terraform)     |  Terraform GKE cluster module  |
 | [results-usl](results-usl)     |      Final scalability results with the factor write concern       |
+| [results-usl/experimentUSL1](results-usl/experimentUSL1)     |      Scalability results with the factor write concern w = majority      |
+| [results-usl/experimentUSL2](results-usl/experimentUSL2)      |      Scalability results with the factor write concern w = 1       |
 | [results-v4](results-v4)     |      Final experiment results with 7 factors and 2 levels (5 repetitions)       |
 | [results-v3](results-v3)     |      Third experimental results attempt with 7 factors and 2 levels (5 repetitions)       |
 | [results-v2](results-v2)     |      Second experimental results attempt with 7 factors and 2 levels (5 repetitions)       |
@@ -37,37 +39,18 @@
 | [Replica Node Configuration (F)](#replica-node-configuration)     |  Primary-Secondary-Secondary  | Primary-Secondary-Arbiter  | 
 | [Chaining (G)](#chaining)     |  Disabled  | Enabled |
 
-## Workload Struture (Example)
+## Experiment Iteration Struture (Example)
 
 | Module               |      Description      |
 | :------------------- | :-------------------: |
-| [outputs](workloads/workload1/outputs)     |  YCSB folder output  |
-| [workload](workloads/workload1/workload1) |   Workload Definition   |
-| [workload.gp](workloads/workload1/workload1.gp)|    Workload GNUPLOT file   |
-| [workload.pdf](workloads/workload1/workload1.pdf)     |      PDF file with plots       |
-| [results-throughput.dat](workloads/workload1/results-throughput.dat)     | Insert operation latency results |
-| [results-latency-insert.dat](workloads/workload1/results-latency-insert.dat)     | Insert operation latency results |
-| [results-latency-read.dat](workloads/workload1/results-latency-read.dat)     | Read operation latency results |
-| [results-latency-scan.dat](workloads/workload1/results-latency-scan.dat)     | Scan operation latency results |
-| [results-latency-update.dat](workloads/workload1/results-latency-update.dat)     | Update operation latency results |
+| [outputs](results-v4/experiment1/iteration1/outputs)     |  YCSB folder output  |
+| [results-throughput.dat](results-v4/experiment1/iteration1/results-throughput.dat)     | Insert operation latency results |
+| [results-latency-insert.dat](results-v4/experiment1/iteration1/results-latency-insert.dat)     | Insert operation latency results |
+| [results-latency-read.dat](results-v4/experiment1/iteration1/results-latency-read.dat)     | Read operation latency results |
+| [results-latency-scan.dat](results-v4/experiment1/iteration1/results-latency-scan.dat)     | Scan operation latency results |
+| [results-latency-update.dat](results-v4/experiment1/iteration1/results-latency-update.dat)     | Update operation latency results |
 
-
-## How to setup a local MongoDB cluster, using Docker Swarm? _(PSS Architecture)_
-In the project root folder, deploy with:
-
-```shell script
-docker-compose up -d
-```
-
-Add the servers to the /etc/hosts file using *nano*:
-(in /etc/hosts)
-```
-(...)
-127.0.0.1 mongo1
-127.0.0.1 mongo2
-127.0.0.1 mongo3
-```
-
+----
 ## How to switch the different factors?
 
 ### Write Concern, Read Concern, Read Preference
@@ -192,49 +175,8 @@ And force one of the secondaries to utilize the other secondary as its sync sour
 kubectl exec mongo-2 -- mongo --eval 'db.adminCommand( { replSetSyncFrom: "mongo-1.mongo:27017" });'
 ```
 
-## How to setup YCSB? _(through source)_
-
-Install YCSB tool to the project root:
-
-```shell script
-curl -O --location https://github.com/brianfrankcooper/YCSB/releases/download/0.17.0/ycsb-0.17.0.tar.gz
-tar xfvz ycsb-0.17.0.tar.gz
-```
-
-## How to create and run a workload? _(workload1 example)_
-
-Setup the workload and outputs folder:
-
-```shell script
-mkdir workloads/workload1 | mkdir workloads/workload1/outputs
-```
-
-Create the workload in the folder generated previously, workloads/workload1.
-
-Install *pymongo* python module through pip:
-
-```shell script
-pip3 install pymongo
-```
-
-Enable execute permissions to *runner-sh* and *ycsb*:
-
-```shell script
-sudo chmod +x ./runner.sh
-sudo chmod +x ycsb-0.17.0/bin/ycsb
-```
-
-Then, just run our runner script with the specific workload, in the root project folder:
-
-```shell script
-./runner.sh -w workload1 -c 0 -x threads -n 100 -s 5 -r 3
-```
-
-This will run workload1, locally (-c 0), from 0 to 100 client threads in increments of 5, and will be repeating each run of the workload 3 times.
-
 ----
-## How to run using GCP? _(workload1 example)_
-
+## How to run using GCP?
 
 Provision the infrastructure:
 
@@ -246,7 +188,7 @@ terraform apply
 Connect to the cluster by getting the command line access from GCP console, like:
 
 ```shell script
-gcloud container clusters get-credentials test-kubernetes-327118-gke --region europe-west1 --project test-kubernetes-327118
+gcloud container clusters get-credentials <gcloud_credentials> --region <region> --project <project_id>
 ```
 
 To watch the creation of the pods (optional):
@@ -255,20 +197,15 @@ To watch the creation of the pods (optional):
 watch -x kubectl get pods
 ```
 
-Create StatefulSet and Service, and create the replica set:
+Clean existing environment (if already existing) and create StatefulSet, Service. Also initiates replica set with different system parameters like chaining and architecture (PSS or PSA) as booleans:
 
 ```shell script
-cd ../k8s
+cd ..
+./rebuild_pods.sh -c <chaining_enabled> -a <arbiter_exists>
+```
 
-kubectl apply -f mongo.yaml
-
-kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [ {_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017"}], settings: {chainingAllowed: false}});'
-
-kubectl exec mongo-0 -- mongo --eval 'rs.initiate({_id: "rs0", version: 1, members: [ {_id: 0, host: "mongo-0.mongo:27017"}, {_id: 1, host: "mongo-1.mongo:27017"}, {_id: 2, host: "mongo-2.mongo:27017", arbiterOnly: true}], settings: {chainingAllowed: false}});'
-
-kubectl exec mongo-0 -- mongo --eval 'rs.status();'
-
-kubectl exec mongo-2 -- mongo --eval 'db.adminCommand( { replSetSyncFrom: "mongo-1.mongo:27017" });'
+----
+## How to run the experiments?
 
 ```
 Run pod with our ycsb image hosted @ dockerhub:
@@ -287,13 +224,22 @@ docker build -t ycsb:latest .
 kubectl run ycsb --rm -it --image ycsb:latest --image-pull-policy=Never -- /bin/bash
 ```
 
-Run the script:
+Run the script to perform benchmark experiment:
 
 ```shell script
-./runner.sh -w workload1 -e experiment1 -i 5 -c 1 -x throughput -m 16 -n 16 -s 1 -r 3 -W 1 -R majority -P primaryPreferred
+./runner.sh -w workload1 -e experiment1 -i 5 -c 1 -x throughput -m 16 -n 16 -s 1 -r 5 -W 1 -R majority -P primary
+```
+This will run workload1, as the experiment with id 1, perform 5 iterations, on the cloud (-c 1), from 16 to 16 client threads in increments of 1, repeating each run of the workload 5 times. Each request is being done using writeConcern w = 1 and readConcern = majority, reading from the primary.
+
+Run the script to perform scalability experiment:
+
+```shell script
+./runner.sh -w workload1 -e experiment2 -i 1 -c 1 -x throughput -m 1 -n 100 -s 5 -r 5 -W 1 -R local -P primary
 ```
 
-Copy Workloads folder from the pod to the local environment:
+This will run workload1, as the experiment with id 2, perform 1 iteration, on the cloud (-c 1), from 1 to 100 client threads in increments of 5, repeating each run of the workload 5 times. Each request is being done using writeConcern w = 1 and readConcern = local, reading from the primary.
+
+If running on the cloud, copy experiments folder from the pod to the local environment:
 
 ```shell script
 kubectl cp default/ycsb:/experiments/experiment1 ./results/experiment1 -c ycsb

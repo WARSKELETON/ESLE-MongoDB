@@ -12,5 +12,5 @@ variable "gke_num_nodes" {
 }
 
 variable "machine_type" {
-  default     = "n2-standard-1"
+  default     = "e2-highmem-8"
 }
