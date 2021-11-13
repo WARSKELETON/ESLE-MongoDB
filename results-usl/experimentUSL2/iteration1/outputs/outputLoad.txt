@@ -1,6 +1,6 @@
-mongo client connection created with mongodb://mongo-0.mongo:27017,mongo-1.mongo:27017,mongo-2.mongo:27017/ycsb?w=1
-[OVERALL], RunTime(ms), 1438
-[OVERALL], Throughput(ops/sec), 695.4102920723227
+mongo connection created with mongodb://mongo-0.mongo:27017,mongo-1.mongo:27017,mongo-2.mongo:27017/ycsb?w=1
+[OVERALL], RunTime(ms), 1368
+[OVERALL], Throughput(ops/sec), 730.9941520467836
 [TOTAL_GCS_Copy], Count, 0
 [TOTAL_GC_TIME_Copy], Time(ms), 0
 [TOTAL_GC_TIME_%_Copy], Time(%), 0.0
@@ -11,15 +11,15 @@ mongo client connection created with mongodb://mongo-0.mongo:27017,mongo-1.mongo
 [TOTAL_GC_TIME], Time(ms), 0
 [TOTAL_GC_TIME_%], Time(%), 0.0
 [CLEANUP], Operations, 1
-[CLEANUP], AverageLatency(us), 3567.0
-[CLEANUP], MinLatency(us), 3566
-[CLEANUP], MaxLatency(us), 3567
-[CLEANUP], 95thPercentileLatency(us), 3567
-[CLEANUP], 99thPercentileLatency(us), 3567
+[CLEANUP], AverageLatency(us), 2219.0
+[CLEANUP], MinLatency(us), 2218
+[CLEANUP], MaxLatency(us), 2219
+[CLEANUP], 95thPercentileLatency(us), 2219
+[CLEANUP], 99thPercentileLatency(us), 2219
 [INSERT], Operations, 1000
-[INSERT], AverageLatency(us), 917.807
-[INSERT], MinLatency(us), 431
-[INSERT], MaxLatency(us), 87743
-[INSERT], 95thPercentileLatency(us), 1374
-[INSERT], 99thPercentileLatency(us), 2020
+[INSERT], AverageLatency(us), 1220.42
+[INSERT], MinLatency(us), 469
+[INSERT], MaxLatency(us), 142591
+[INSERT], 95thPercentileLatency(us), 1755
+[INSERT], 99thPercentileLatency(us), 2517
 [INSERT], Return=OK, 1000

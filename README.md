@@ -8,8 +8,9 @@
 | [gcp/k8s](gcp/k8s)     |  MongoDB replica set kubernetes deployment module  |
 | [gcp/terraform](gcp/terraform)     |  Terraform GKE cluster module  |
 | [results-usl](results-usl)     |      Final scalability results with the factor write concern       |
-| [results-usl/experimentUSL1](results-usl/experimentUSL1)     |      Scalability results with the factor write concern w = majority      |
-| [results-usl/experimentUSL2](results-usl/experimentUSL2)      |      Scalability results with the factor write concern w = 1       |
+| [results-usl/experimentUSL1](results-usl/experimentUSL1)      |      Scalability results with the factor write concern w = majority      |
+| [results-usl/experimentUSL2](results-usl/experimentUSL2)      |      Scalability results with the factor write concern w = 1      |
+| [results-usl/workload1](results-usl/workload1.pdf)      |      Scalability results with the factor experiment 1 and 2      |
 | [results-v4](results-v4)     |      Final experiment results with 7 factors and 2 levels (5 repetitions)       |
 | [results-v3](results-v3)     |      Third experimental results attempt with 7 factors and 2 levels (5 repetitions)       |
 | [results-v2](results-v2)     |      Second experimental results attempt with 7 factors and 2 levels (5 repetitions)       |

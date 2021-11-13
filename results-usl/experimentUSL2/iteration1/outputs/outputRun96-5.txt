@@ -1,46 +1,91 @@
-mongo client connection created with mongodb://mongo-0.mongo:27017,mongo-1.mongo:27017,mongo-2.mongo:27017/ycsb?w=1&readConcernLevel=local&readPreference=primaryPreferred
-[OVERALL], RunTime(ms), 2965
-[OVERALL], Throughput(ops/sec), 3372.681281618887
+mongo client connection created with mongodb://mongo-0.mongo:27017,mongo-1.mongo:27017,mongo-2.mongo:27017/ycsb?w=1&readConcernLevel=local&readPreference=secondary
+17:45:48.489 [Thread-52] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:6, serverValue:3184}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.489 [Thread-52] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:6, serverValue:3184}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.495 [Thread-18] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:8, serverValue:3188}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.489 [Thread-51] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:23, serverValue:3189}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.495 [Thread-29] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:46, serverValue:3195}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.491 [Thread-85] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:17, serverValue:3181}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.495 [Thread-73] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:27, serverValue:3190}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.495 [Thread-76] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:11, serverValue:3196}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.495 [Thread-18] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:8, serverValue:3188}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.489 [Thread-51] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:23, serverValue:3189}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.495 [Thread-29] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:46, serverValue:3195}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.491 [Thread-85] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:17, serverValue:3181}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.491 [Thread-19] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:32, serverValue:3192}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.491 [Thread-86] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:29, serverValue:3191}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.489 [Thread-36] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:7, serverValue:3183}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.495 [Thread-73] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:27, serverValue:3190}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.491 [Thread-71] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:5, serverValue:3185}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.490 [Thread-46] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:22, serverValue:3187}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.490 [Thread-43] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:14, serverValue:3182}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.490 [Thread-28] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:21, serverValue:3186}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.489 [Thread-44] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:33, serverValue:3193}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.491 [Thread-19] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:32, serverValue:3192}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.495 [Thread-76] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:11, serverValue:3196}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.491 [Thread-86] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:29, serverValue:3191}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.489 [Thread-36] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:7, serverValue:3183}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.491 [Thread-71] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:5, serverValue:3185}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.490 [Thread-46] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:22, serverValue:3187}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.490 [Thread-43] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:14, serverValue:3182}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.490 [Thread-28] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:21, serverValue:3186}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+17:45:48.489 [Thread-44] WARN  org.mongodb.driver.connection - Got socket exception on connection [connectionId{localValue:33, serverValue:3193}] to mongo-1.mongo:27017. All connections to mongo-1.mongo:27017 will be closed.
+[OVERALL], RunTime(ms), 3546
+[OVERALL], Throughput(ops/sec), 2820.078962210942
 [TOTAL_GCS_Copy], Count, 6
-[TOTAL_GC_TIME_Copy], Time(ms), 122
-[TOTAL_GC_TIME_%_Copy], Time(%), 4.114671163575042
+[TOTAL_GC_TIME_Copy], Time(ms), 150
+[TOTAL_GC_TIME_%_Copy], Time(%), 4.230118443316413
 [TOTAL_GCS_MarkSweepCompact], Count, 0
 [TOTAL_GC_TIME_MarkSweepCompact], Time(ms), 0
 [TOTAL_GC_TIME_%_MarkSweepCompact], Time(%), 0.0
 [TOTAL_GCs], Count, 6
-[TOTAL_GC_TIME], Time(ms), 122
-[TOTAL_GC_TIME_%], Time(%), 4.114671163575042
-[READ], Operations, 5085
-[READ], AverageLatency(us), 16471.214159292034
-[READ], MinLatency(us), 437
-[READ], MaxLatency(us), 245375
-[READ], 95thPercentileLatency(us), 66431
-[READ], 99thPercentileLatency(us), 158975
-[READ], Return=OK, 5085
+[TOTAL_GC_TIME], Time(ms), 150
+[TOTAL_GC_TIME_%], Time(%), 4.230118443316413
+[READ], Operations, 4903
+[READ], AverageLatency(us), 23782.781970222313
+[READ], MinLatency(us), 604
+[READ], MaxLatency(us), 327167
+[READ], 95thPercentileLatency(us), 107967
+[READ], 99thPercentileLatency(us), 175231
+[READ], Return=OK, 4903
+[READ], Return=NOT_FOUND, 24
+[READ], Return=ERROR, 41
+[SCAN-FAILED], Operations, 12
+[SCAN-FAILED], AverageLatency(us), 106062.66666666667
+[SCAN-FAILED], MinLatency(us), 42304
+[SCAN-FAILED], MaxLatency(us), 295935
+[SCAN-FAILED], 95thPercentileLatency(us), 144127
+[SCAN-FAILED], 99thPercentileLatency(us), 295935
 [CLEANUP], Operations, 96
-[CLEANUP], AverageLatency(us), 98.625
+[CLEANUP], AverageLatency(us), 101.97916666666667
 [CLEANUP], MinLatency(us), 0
-[CLEANUP], MaxLatency(us), 9383
+[CLEANUP], MaxLatency(us), 9695
 [CLEANUP], 95thPercentileLatency(us), 1
-[CLEANUP], 99thPercentileLatency(us), 22
-[UPDATE], Operations, 1490
-[UPDATE], AverageLatency(us), 20611.91610738255
-[UPDATE], MinLatency(us), 610
-[UPDATE], MaxLatency(us), 216575
-[UPDATE], 95thPercentileLatency(us), 80959
-[UPDATE], 99thPercentileLatency(us), 156159
-[UPDATE], Return=OK, 1490
-[INSERT], Operations, 1468
-[INSERT], AverageLatency(us), 21309.768392370574
-[INSERT], MinLatency(us), 527
-[INSERT], MaxLatency(us), 283391
-[INSERT], 95thPercentileLatency(us), 82175
-[INSERT], 99thPercentileLatency(us), 174975
-[INSERT], Return=OK, 1468
-[SCAN], Operations, 1957
-[SCAN], AverageLatency(us), 35766.96627491058
-[SCAN], MinLatency(us), 547
-[SCAN], MaxLatency(us), 443647
-[SCAN], 95thPercentileLatency(us), 148223
-[SCAN], 99thPercentileLatency(us), 239487
-[SCAN], Return=OK, 1957
+[CLEANUP], 99thPercentileLatency(us), 33
+[UPDATE], Operations, 1518
+[UPDATE], AverageLatency(us), 17776.735177865612
+[UPDATE], MinLatency(us), 943
+[UPDATE], MaxLatency(us), 316159
+[UPDATE], 95thPercentileLatency(us), 86271
+[UPDATE], 99thPercentileLatency(us), 176127
+[UPDATE], Return=OK, 1518
+[INSERT], Operations, 1461
+[INSERT], AverageLatency(us), 20219.80698151951
+[INSERT], MinLatency(us), 830
+[INSERT], MaxLatency(us), 378367
+[INSERT], 95thPercentileLatency(us), 104511
+[INSERT], 99thPercentileLatency(us), 188415
+[INSERT], Return=OK, 1461
+[READ-FAILED], Operations, 65
+[READ-FAILED], AverageLatency(us), 67716.72307692308
+[READ-FAILED], MinLatency(us), 1000
+[READ-FAILED], MaxLatency(us), 310015
+[READ-FAILED], 95thPercentileLatency(us), 234623
+[READ-FAILED], 99thPercentileLatency(us), 292095
+[SCAN], Operations, 2041
+[SCAN], AverageLatency(us), 41239.22097011269
+[SCAN], MinLatency(us), 1080
+[SCAN], MaxLatency(us), 402687
+[SCAN], 95thPercentileLatency(us), 157951
+[SCAN], 99thPercentileLatency(us), 249599
+[SCAN], Return=OK, 2041
+[SCAN], Return=ERROR, 12
