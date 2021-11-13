@@ -210,7 +210,7 @@ cd ..
 ----
 ## How to run the experiments?
 
-```
+
 Run pod with our ycsb image hosted @ dockerhub:
 
 ```shell script
