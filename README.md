@@ -10,6 +10,8 @@
 | [results-usl](results-usl)     |      Final scalability results with the factor write concern       |
 | [results-usl/experimentUSL1](results-usl/experimentUSL1)      |      Scalability results with the factor write concern w = majority      |
 | [results-usl/experimentUSL2](results-usl/experimentUSL2)      |      Scalability results with the factor write concern w = 1      |
+| [results-usl/experimentUSL3](results-usl/experimentUSL3)      |      Scalability results with the factor write concern w = majority (6 replica nodes)      |
+| [results-usl/experimentUSL4](results-usl/experimentUSL4)      |      Scalability results with the factor write concern w = 1 (6 replica nodes)     |
 | [results-usl/workload1](results-usl/workload1.pdf)      |      Scalability results with the factor experiment 1 and 2      |
 | [results-v4](results-v4)     |      Final experiment results with 7 factors and 2 levels (5 repetitions)       |
 | [results-v3](results-v3)     |      Third experimental results attempt with 7 factors and 2 levels (5 repetitions)       |
